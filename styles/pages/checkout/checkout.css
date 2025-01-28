@@ -76,6 +76,10 @@
   margin-bottom: 22px;
 }
 
+.update-input {
+  width: 50px;
+}
+
 .cart-item-details-grid {
   display: grid;
   /* 100px 1fr 1fr; means the 2nd and 3rd column will
@@ -144,6 +148,7 @@
   grid-template-columns: 24px 1fr;
   margin-bottom: 12px;
   cursor: pointer;
+  width: 192px;
 }
 
 .delivery-option-input {
@@ -160,6 +165,8 @@
 .delivery-option-price {
   color: rgb(120, 120, 120);
   font-size: 15px;
+  width: 168px;
+  text-align: left;
 }
 
 .payment-summary-title {

@@ -76,6 +76,7 @@
 
   display: flex;
   flex-direction: column;
+  height: 413px;
 }
 
 .product-image-container {
@@ -133,15 +134,16 @@
 .added-to-cart {
   color: rgb(6, 125, 98);
   font-size: 16px;
-
   display: flex;
+  flex-direction: row-reverse;
+  justify-content: left;
   align-items: center;
   margin-bottom: 8px;
 
   /* At first, the "Added to cart" message will
      be invisible. Use JavaScript to change the
      opacity and make it visible. */
-  opacity: 0;
+  /* opacity: 0; */
 }
 
 .added-to-cart img {
