@@ -6,6 +6,9 @@ function getProduct(selectedProduct) {
     return cart.find(product => product.id === selectedProduct.id);
 }
 
+// This function saves the data and geenrates the HTML, completing 2 steps of js at the same time
+// It is using MVC method (Model View Control)
+// Model is the same as saving the data, and View is the same as generating the HTML
 export function renderPaymentSummary() {
     let productPriceCents = 0;
     let shippingPriceCents = 0;

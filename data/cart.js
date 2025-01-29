@@ -1,7 +1,7 @@
 import {formatCurrency} from "../scripts/utils/money.js"
 import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js" // Default export doesn't use curly brace '{}'
 import {renderPaymentSummary} from './paymentSummary.js'
-import {deliveryOptions} from "./deliveryOptions.js"
+// import {deliveryOptions} from "./deliveryOptions.js"
 
 const today = dayjs(); // The current date
 
@@ -22,6 +22,7 @@ function deleteProduct(itemContainer, index) {
     productCount -= selectedProduct.quantity
     headerQuantity.textContent = `${productCount} items`;
     localStorage.setItem('counter', counter);
+    renderPaymentSummary() // Reload the payment summary container
 }
 
 let hasGenerated = false; // Flag to make sure that the update input field is generated only once
@@ -59,6 +60,8 @@ function saveQuantity(updateInput, quantityP, updateBtn, index, itemContainer) {
     else {
         alert('Not a valid quantity');
     }
+
+    renderPaymentSummary() // Reload the payment summary container
 }
 
 // Function to allow user to start updating the quantity
@@ -190,7 +193,7 @@ cart.forEach((selectedProduct, index) => {
         deliveryDate.textContent = `Delivery date: ${chosenDelivery}`; // Set the delivery date header to show the correct shipping date
         selectedProduct.deliveryOptionId = '1'; // Set the product's delivery option id accordingly, so we can later identify which shipping option was chosen
         localStorage.setItem('cart', JSON.stringify(cart));
-        // renderPaymentSummary()
+        renderPaymentSummary() // Reload the payment summary container
     })
 
     const deliveryOptionPrice = document.createElement('div')
@@ -228,7 +231,7 @@ cart.forEach((selectedProduct, index) => {
         deliveryDate.textContent = `Delivery date: ${chosenDelivery2}`; // Set the delivery date header to show the correct shipping date
         selectedProduct.deliveryOptionId = '2'; // Set the product's delivery option id accordingly, so we can later identify which shipping option was chosen
         localStorage.setItem('cart', JSON.stringify(cart));
-        // renderPaymentSummary()
+        renderPaymentSummary() // Reload the payment summary container
     })
 
     const deliveryOptionPrice2 = document.createElement('div')
@@ -266,6 +269,7 @@ cart.forEach((selectedProduct, index) => {
         deliveryDate.textContent = `Delivery date: ${chosenDelivery3}`; // Set the delivery date header to show the correct shipping date
         selectedProduct.deliveryOptionId = '3'; // Set the product's delivery option id accordingly, so we can later identify which shipping option was chosen
         localStorage.setItem('cart', JSON.stringify(cart));
+        renderPaymentSummary() // Reload the payment summary container
     })
 
     const deliveryOptionPrice3 = document.createElement('div')
