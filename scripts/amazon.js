@@ -60,7 +60,6 @@ function addToCart(selectedProduct, index) {
   } else {
     selectedProduct.quantity = parseInt(document.querySelectorAll('.product-quantity-container select')[index].value);
     selectedProduct.deliveryOptionId = '1'
-    // console.log(selectedProduct.deliveryOptionId)
     cart.push(selectedProduct);
   }
   localStorage.setItem('cart', JSON.stringify(cart));

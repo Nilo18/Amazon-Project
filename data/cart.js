@@ -25,13 +25,17 @@ function deleteProduct(itemContainer, index) {
 }
 
 let hasGenerated = false; // Flag to make sure that the update input field is generated only once
-let saveHandler; // Variable to store the event listener reference
+let saveHandlers = []; // Variable to store the event listener reference
 
 // Function to allow the user to save the selected quantity
 function saveQuantity(updateInput, quantityP, updateBtn, index, itemContainer) {
+    // Get the current value of the input element
+    // Add 10 as the second parameter to ensure that the value is always in the 10 based system (Not necessary, it just improves security)
+    // If the parsed value is invalid or empty ("", null or NaN) it will default to 0
     const newValue = parseInt(updateInput.value, 10) || 0; 
     const previousQuantity = parseInt(quantityP.dataset.previousQuantity, 10) || 0; 
 
+    // If the value in the input field is positive, display it
     if (newValue >= 1) {
         quantityP.textContent = `Quantity: ${newValue}`;
         updateBtn.textContent = 'Update';
@@ -43,20 +47,28 @@ function saveQuantity(updateInput, quantityP, updateBtn, index, itemContainer) {
 
         cart[index].quantity = newValue;
         localStorage.setItem('cart', JSON.stringify(cart));
-        updateBtn.removeEventListener('click', saveHandler);
-    } else if (newValue === 0) {
+
+        // Remove the event listener after saving to ensure that it can be re-attached
+        updateBtn.removeEventListener('click', saveHandlers[index]);
+        // updateBtn.addEventListener('click', saveHandler);
+    } // If it is 0, remove it 
+    else if (newValue === 0) {
         deleteProduct(itemContainer, index);
-    } else {
+        updateBtn.removeEventListener('click', saveHandlers[index]);
+    } // If it is negative, display a popup to warn the user 
+    else {
         alert('Not a valid quantity');
     }
-
-    // Remove the event listener after saving
-
 }
 
 // Function to allow user to start updating the quantity
 function updateQuantity(updateBtn, quantityP, index, itemContainer) {
     if (!hasGenerated) {
+        // Parse the quantity paragraph as an int and use split(':' ) to split it wherever the colon is
+        // It essentially makes an array of two elements from the initial quantityP
+        // By accessing [1] index, we get the number (value) which we want to work with
+        // 10 is used to ensure that the value is always in the decimal (base 10) system
+        // If the parsing fails fall back to 1 as a default value
         const currentQuantity = parseInt(quantityP.textContent.split(': ')[1], 10) || 1; 
         const updateInput = document.createElement('input');
         updateBtn.textContent = 'Save';
@@ -71,11 +83,11 @@ function updateQuantity(updateBtn, quantityP, index, itemContainer) {
         updateBtn.dataset.index = index; // Store index in dataset
 
         // Remove any previous event listener
-        updateBtn.removeEventListener('click', saveHandler);
+        updateBtn.removeEventListener('click', saveHandlers[index]);
 
         // Assign the event listener to the variable and add it
-        saveHandler = () => saveQuantity(updateInput, quantityP, updateBtn, index, itemContainer);
-        updateBtn.addEventListener('click', saveHandler);
+        saveHandlers[index] = () => saveQuantity(updateInput, quantityP, updateBtn, index, itemContainer);
+        updateBtn.addEventListener('click', saveHandlers[index]);
     }
 }
 
@@ -161,7 +173,7 @@ cart.forEach((selectedProduct, index) => {
     const deliveryInput = document.createElement('input')
     deliveryInput.type = 'radio'
     deliveryInput.name = `delivery-${index}`;
-    deliveryInput.checked = true;
+    deliveryInput.checked = selectedProduct.deliveryOptionId === '1'; // Check the first selector if it's id is being selected
     deliveryInput.setAttribute('class', 'delivery-option-input')
 
     // ----------
@@ -175,7 +187,10 @@ cart.forEach((selectedProduct, index) => {
     deliveryDate.textContent = `Delivery date: ${chosenDelivery}`; // Set the header delivery-date's text to display the initial date
 
     deliveryInput.addEventListener('click', () => {
-        deliveryDate.textContent = `Delivery date: ${chosenDelivery}`;
+        deliveryDate.textContent = `Delivery date: ${chosenDelivery}`; // Set the delivery date header to show the correct shipping date
+        selectedProduct.deliveryOptionId = '1'; // Set the product's delivery option id accordingly, so we can later identify which shipping option was chosen
+        localStorage.setItem('cart', JSON.stringify(cart));
+        // renderPaymentSummary()
     })
 
     const deliveryOptionPrice = document.createElement('div')
@@ -187,7 +202,6 @@ cart.forEach((selectedProduct, index) => {
 
     deliveryOption.append(deliveryInput, dateHolder)
 
-
     // ----------
 
     const deliveryOption2 = document.createElement('div')
@@ -198,6 +212,7 @@ cart.forEach((selectedProduct, index) => {
     const deliveryInput2 = document.createElement('input')
     deliveryInput2.type = 'radio'
     deliveryInput2.name = `delivery-${index}`;
+    deliveryInput2.checked = selectedProduct.deliveryOptionId === '2';
     deliveryInput2.setAttribute('class', 'delivery-option-input')
 
     // ----------
@@ -210,7 +225,10 @@ cart.forEach((selectedProduct, index) => {
     const chosenDelivery2 = deliveryOptionDate2.textContent;
 
     deliveryInput2.addEventListener('click', () => {
-        deliveryDate.textContent = `Delivery date: ${chosenDelivery2}`;
+        deliveryDate.textContent = `Delivery date: ${chosenDelivery2}`; // Set the delivery date header to show the correct shipping date
+        selectedProduct.deliveryOptionId = '2'; // Set the product's delivery option id accordingly, so we can later identify which shipping option was chosen
+        localStorage.setItem('cart', JSON.stringify(cart));
+        // renderPaymentSummary()
     })
 
     const deliveryOptionPrice2 = document.createElement('div')
@@ -232,6 +250,7 @@ cart.forEach((selectedProduct, index) => {
     const deliveryInput3 = document.createElement('input')
     deliveryInput3.type = 'radio'
     deliveryInput3.name = `delivery-${index}`;
+    deliveryInput3.checked = selectedProduct.deliveryOptionId === '3';
     deliveryInput3.setAttribute('class', 'delivery-option-input')
 
     // ----------
@@ -244,7 +263,9 @@ cart.forEach((selectedProduct, index) => {
     const chosenDelivery3 = deliveryOptionDate3.textContent;
 
     deliveryInput3.addEventListener('click', () => {
-        deliveryDate.textContent = `Delivery date: ${chosenDelivery3}`;
+        deliveryDate.textContent = `Delivery date: ${chosenDelivery3}`; // Set the delivery date header to show the correct shipping date
+        selectedProduct.deliveryOptionId = '3'; // Set the product's delivery option id accordingly, so we can later identify which shipping option was chosen
+        localStorage.setItem('cart', JSON.stringify(cart));
     })
 
     const deliveryOptionPrice3 = document.createElement('div')
@@ -262,3 +283,5 @@ cart.forEach((selectedProduct, index) => {
     productCount += selectedProduct.quantity;
     headerQuantity.textContent = `${productCount} items`
 })
+
+renderPaymentSummary()
