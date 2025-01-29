@@ -46,7 +46,8 @@ const displayed = new Array(addButton.length).fill(false);
 
 //Amount of items in the cart and initialize the counter to get the latest number of counter
 const cartQuantity = document.querySelector('.cart-quantity');
-let counter = parseInt(localStorage.getItem('counter')) || 3;
+let counter = parseInt(localStorage.getItem('counter')) || 0;
+// console.log(counter)
 cartQuantity.textContent = counter;
 
 //Checkout array, to push the items on the checkout page

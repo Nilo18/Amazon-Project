@@ -7,7 +7,7 @@ const today = dayjs(); // The current date
 
 const storagedCart = localStorage.getItem('cart')
 export let cart = JSON.parse(storagedCart) || []
-let counter = parseInt(localStorage.getItem('counter')) || 2; // Counter from amazon.js
+let counter = parseInt(localStorage.getItem('counter')) || 0; // Counter from amazon.js
 
 const orderSummary = document.querySelector('.order-summary') // All products are placed here, and displayed as a grid
 
@@ -94,19 +94,8 @@ function updateQuantity(updateBtn, quantityP, index, itemContainer) {
     }
 }
 
-// const totalCost = document.getElementById('itemCost').textContent
-// const totalCost = document.createElement('div')
-// totalCost.setAttribute('class', 'payment-summary-money')
-// totalCost.textContent = 45
-// orderSummary.appendChild(totalCost)
-// + selectedProduct.quantity * formatCurrency(selectedProduct.priceCents)
-// console.log(totalCost)
-// function calculateItemCost(selectedProduct) {
-//     const calculatedTotalCost = totalCost + selectedProduct.quantity * formatCurrency(selectedProduct.priceCents)
-// }
-
 const headerQuantity = document.querySelector('.return-to-home-link');
-let productCount = 3; // Checkout header counter
+let productCount = 0; // Checkout header counter
 headerQuantity.textContent = `${productCount} items`;
 
 // Generate a container to display the products
@@ -288,4 +277,4 @@ cart.forEach((selectedProduct, index) => {
     headerQuantity.textContent = `${productCount} items`
 })
 
-renderPaymentSummary()
+renderPaymentSummary() // Load payment summary for the first time 

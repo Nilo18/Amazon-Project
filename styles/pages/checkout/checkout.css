@@ -80,6 +80,10 @@
   width: 50px;
 }
 
+#testContainer {
+  display: none;
+}
+
 .cart-item-details-grid {
   display: grid;
   /* 100px 1fr 1fr; means the 2nd and 3rd column will
