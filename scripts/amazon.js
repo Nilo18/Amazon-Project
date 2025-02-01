@@ -101,4 +101,4 @@ addButton.forEach((button, index) => {
 });
 
 
-// counter = 3;
+// counter = 0;
