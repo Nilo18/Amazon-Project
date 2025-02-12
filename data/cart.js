@@ -3,10 +3,13 @@ import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js" // Default expo
 import {renderPaymentSummary} from './paymentSummary.js'
 // import {deliveryOptions} from "./deliveryOptions.js"
 
-const today = dayjs(); // The current date
-
 const storagedCart = localStorage.getItem('cart')
 export let cart = JSON.parse(storagedCart) || []
+
+document.addEventListener('DOMContentLoaded', () => {
+
+const today = dayjs(); // The current date
+
 let counter = parseInt(localStorage.getItem('counter')) || 0; // Counter from amazon.js
 
 const orderSummary = document.querySelector('.order-summary') // All products are placed here, and displayed as a grid
@@ -17,7 +20,6 @@ function deleteProduct(itemContainer, index) {
     itemContainer.remove()
     cart.splice(index, 1)
     localStorage.setItem('cart', JSON.stringify(cart))
-    // window.location.reload();
     counter -= selectedProduct.quantity // Changing counter from amazon.js
     productCount -= selectedProduct.quantity
     headerQuantity.textContent = `${productCount} items`;
@@ -101,6 +103,7 @@ headerQuantity.textContent = `${productCount} items`;
 // Generate a container to display the products
 cart.forEach((selectedProduct, index) => {
     // calculateItemCost(selectedProduct)
+    console.log(selectedProduct)
 
     const itemContainer = document.createElement('div')
     itemContainer.setAttribute('class', 'cart-item-container')
@@ -165,7 +168,7 @@ cart.forEach((selectedProduct, index) => {
     const deliveryInput = document.createElement('input')
     deliveryInput.type = 'radio'
     deliveryInput.name = `delivery-${index}`;
-    deliveryInput.checked = selectedProduct.deliveryOptionId === '1'; // Check the first selector if it's id is being selected
+    deliveryInput.checked = selectedProduct.deliveryOptionId === '1' || !selectedProduct.deliveryOptionId  // Check the first selector if it's id is being selected
     deliveryInput.setAttribute('class', 'delivery-option-input')
 
     // ----------
@@ -204,7 +207,7 @@ cart.forEach((selectedProduct, index) => {
     const deliveryInput2 = document.createElement('input')
     deliveryInput2.type = 'radio'
     deliveryInput2.name = `delivery-${index}`;
-    deliveryInput2.checked = selectedProduct.deliveryOptionId === '2';
+    deliveryInput2.checked = selectedProduct.deliveryOptionId === '2'
     deliveryInput2.setAttribute('class', 'delivery-option-input')
 
     // ----------
@@ -278,3 +281,4 @@ cart.forEach((selectedProduct, index) => {
 })
 
 renderPaymentSummary() // Load payment summary for the first time 
+})

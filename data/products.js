@@ -1,3 +1,103 @@
+export class Product {
+  #id;
+  #image;
+  #name;
+  #rating;
+  #priceCents;
+  quantity = 0; // Default quantity value
+  deliveryOptionId = '1'; // Default delivery option
+
+  constructor(productDetails) {
+    this.#id = productDetails.id;
+    this.#image = productDetails.image;
+    this.#rating = productDetails.rating;
+    this.#name = productDetails.name;
+    this.#priceCents = productDetails.priceCents;
+
+    if (productDetails.quantity !== undefined) {
+      this.quantity = productDetails.quantity;
+    }
+
+    if (productDetails.deliveryOptionId !== undefined) {
+      this.deliveryOptionId = productDetails.deliveryOptionId;
+    }
+  }
+
+  // Convert from JSON into Product class instance
+  static fromJSON(data) {
+    const product = new Product({
+      id: data.id,
+      image: data.image,
+      rating: data.rating,
+      name: data.name,
+      priceCents: data.priceCents,
+    });
+
+    if (data.quantity !== undefined) {
+      product.quantity = data.quantity;
+    }
+
+    if (data.deliveryOptionId !== undefined) {
+      product.deliveryOptionId = data.deliveryOptionId; // Restore deliveryOptionId
+    }
+
+    return product;
+  }
+
+  // Convert Product instance to plain object
+  toJSON() {
+    return {
+      id: this.#id,
+      image: this.#image,
+      rating: this.#rating,
+      name: this.#name,
+      priceCents: this.#priceCents,
+      quantity: this.quantity,
+      deliveryOptionId: this.deliveryOptionId, // Ensure it gets saved
+    };
+  }
+
+  // Getter methods
+  getId() {
+    return this.#id;
+  }
+
+  getName() {
+    return this.#name;
+  }
+
+  getPrice() {
+    return this.#priceCents;
+  }
+
+  getRating() {
+    return this.#rating;
+  }
+
+  getImage() {
+    return this.#image;
+  }
+}
+
+
+// const socks = new Product({
+//   id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
+//   image: "images/products/athletic-cotton-socks-6-pairs.jpg",
+//   name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
+//   rating: {
+//     stars: 4.5,
+//     count: 87
+//   },
+//   priceCents: 1090,
+//   keywords: [
+//     "socks",
+//     "sports",
+//     "apparel"
+//   ]
+// })
+
+// console.log(socks.getRating().stars)
+
 export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
@@ -657,4 +757,8 @@ export const products = [
       "mens"
     ]
   }
-];
+].map((productDetails) => {
+  return new Product(productDetails)
+});
+
+console.log(products[0].getRating().stars)

@@ -1,20 +1,29 @@
-import { products } from "../data/products.js";
+import { products, Product } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
 // import {getProduct} from "../data/cart.js"
+
+// Function to convert an object into Product class instance to load from cart
+function loadCart() {
+  cart = cart.map(item => {
+    const product = Product.fromJSON(item);  // Use the fromJSON to create a Product instance
+    console.log(product);  // Log to check the converted product
+    return product;  // Return the newly created Product instance
+  });
+}
 
 let productsHTML = '';
 
 products.forEach((product, index) => {
     productsHTML += `<div class="product-container">
           <div class="product-image-container">
-            <img class="product-image" src="${product.image}">
+            <img class="product-image" src="${product.getImage()}">
           </div>
-          <div class="product-name limit-text-to-2-lines">${product.name}</div>
+          <div class="product-name limit-text-to-2-lines">${product.getName()}</div>
           <div class="product-rating-container">
-            <img class="product-rating-stars" src="images/ratings/rating-${product.rating.stars * 10}.png">
-            <div class="product-rating-count link-primary">${product.rating.count}</div>
+            <img class="product-rating-stars" src="images/ratings/rating-${product.getRating().stars * 10}.png">
+            <div class="product-rating-count link-primary">${product.getRating().count}</div>
           </div>
-          <div class="product-price">$${formatCurrency(product.priceCents)}</div>
+          <div class="product-price">$${formatCurrency(product.getPrice())}</div>
           <div class="product-quantity-container">
             <select>
               <option selected value="1">1</option>
@@ -33,10 +42,12 @@ products.forEach((product, index) => {
           <div class="added-to-cart"></div>
           <button class="add-to-cart-button button-primary">Add to Cart</button>
         </div>`;
+        // console.log(product)
 });
 
 //The main grid
 const productsGrid = document.querySelector('.js-products-grid');
+// console.log(productsHTML)
 productsGrid.innerHTML = productsHTML;
 
 //Paragraph to display the message, buttons and flags to make sure that the message is displayed once
@@ -47,24 +58,37 @@ const displayed = new Array(addButton.length).fill(false);
 //Amount of items in the cart and initialize the counter to get the latest number of counter
 const cartQuantity = document.querySelector('.cart-quantity');
 let counter = parseInt(localStorage.getItem('counter')) || 0;
-// console.log(counter)
 cartQuantity.textContent = counter;
 
 //Checkout array, to push the items on the checkout page
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
+loadCart()
 
-function addToCart(selectedProduct, index) {
+export function addToCart(selectedProduct, index) {
   cart = JSON.parse(localStorage.getItem('cart')) || [];
-  const existingProduct = cart.find(product => product.id === selectedProduct.id);
+  loadCart(); // Reload the cart
+
+  const existingProduct = cart.find(product => product.getId() === selectedProduct.getId());
+
   if (existingProduct) {
     existingProduct.quantity += parseInt(document.querySelectorAll('.product-quantity-container select')[index].value);
   } else {
     selectedProduct.quantity = parseInt(document.querySelectorAll('.product-quantity-container select')[index].value);
-    selectedProduct.deliveryOptionId = '1'
+    
+    // Only set deliveryOptionId if it's undefined (prevents overwriting selected options)
+    if (!selectedProduct.deliveryOptionId) {
+      selectedProduct.deliveryOptionId = '1';
+    }
+
     cart.push(selectedProduct);
   }
-  localStorage.setItem('cart', JSON.stringify(cart));
+
+  // Save the updated cart back to localStorage
+  localStorage.setItem('cart', JSON.stringify(cart.map(product => product.toJSON())));
+  console.log(cart);  // Log to confirm the cart update
 }
+
+
 
 function handleQuantity(index) {
   const optionChosen = parseInt(document.querySelectorAll('.product-quantity-container select')[index].value);
@@ -73,7 +97,7 @@ function handleQuantity(index) {
   localStorage.setItem('counter', counter);
 }
 
-function createP(index) {
+function createAddedMessage(index) {
   if (!displayed[index]) {
     const addMsg = document.createElement('p');
     addMsg.textContent = 'Added';
@@ -93,11 +117,12 @@ function createP(index) {
   }
 
   handleQuantity(index);
-  addToCart({ ...products[index] }, index);
+  addToCart(products[index], index);
+  console.log(products[index])
 }
 
 addButton.forEach((button, index) => {
-  button.addEventListener('click', () => createP(index));
+  button.addEventListener('click', () => createAddedMessage(index));
 });
 
 
