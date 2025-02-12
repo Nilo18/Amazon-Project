@@ -38,6 +38,10 @@ products.forEach((product, index) => {
               <option value="10">10</option>
             </select>
           </div>
+          <!--We call this method without knowing exactly what class the product is -->
+          <!--Instead the method is defined according to the class, this is called polymorphism -->
+          ${product.extraInfoHTML()}
+
           <div class="product-spacer"></div>
           <div class="added-to-cart"></div>
           <button class="add-to-cart-button button-primary">Add to Cart</button>
