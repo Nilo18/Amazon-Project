@@ -1,6 +1,7 @@
 import {formatCurrency} from "../scripts/utils/money.js"
 import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js" // Default export doesn't use curly brace '{}'
 import {renderPaymentSummary} from './paymentSummary.js'
+// import './backend-practice.js'
 // import {deliveryOptions} from "./deliveryOptions.js"
 
 const storagedCart = localStorage.getItem('cart')
