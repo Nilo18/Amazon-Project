@@ -76,7 +76,6 @@ function renderProductsGrid() {
 
   //Checkout array, to push the items on the checkout page
 
-
   function addToCart(selectedProduct, index) {
     cart = JSON.parse(localStorage.getItem('cart')) || [];
     loadCart(); // Reload the cart
@@ -100,8 +99,6 @@ function renderProductsGrid() {
     localStorage.setItem('cart', JSON.stringify(cart.map(product => product.toJSON())));
     console.log(cart);  // Log to confirm the cart update
   }
-
-
 
   function handleQuantity(index) {
     const optionChosen = parseInt(document.querySelectorAll('.product-quantity-container select')[index].value);

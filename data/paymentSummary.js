@@ -6,17 +6,18 @@ function getProduct(selectedProduct) {
     return cart.find(product => product.id === selectedProduct.id);
 }
 
-
 // This function saves the data and geenrates the HTML, completing 2 steps of js at the same time
 // It is using MVC method (Model View Control)
 // Model is the same as saving the data, and View is the same as generating the HTML
 export function renderPaymentSummary() {
     let productPriceCents = 0;
     let shippingPriceCents = 0;
+    let totalQuantity = 0;
 
     cart.forEach(cartItem => {
         const product = getProduct(cartItem) // Identify the product
         productPriceCents += product.priceCents * cartItem.quantity // The total cost is quantity times price, so calculate and sum it up
+        totalQuantity += cartItem.quantity; // Sum up the quantities
 
         const deliveryOption = getDeliveryOption(cartItem) // Identify the shipping option
         shippingPriceCents += deliveryOption.priceCents  // Calculate the total cost of all the items
@@ -32,7 +33,7 @@ export function renderPaymentSummary() {
           </div>
 
           <div class="payment-summary-row">
-            <div>Items (3):</div>
+            <div id="paymentSummaryProductCount">Items (${totalQuantity}):</div>
                 <div class="payment-summary-money">
                   $${formatCurrency(productPriceCents)}
                 </div>
