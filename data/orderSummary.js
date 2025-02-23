@@ -25,65 +25,65 @@ function redirectToTrackingPage() {
     window.location.href = 'tracking.html'
 }
   
-function buyAgain(buyAgainMessage, buyAgainIcon, selectedProduct, index) {
-    buyAgainMessage.innerHTML = '&#10003; Added'
-    buyAgainIcon.style.display = 'none'
+// function buyAgain(buyAgainMessage, buyAgainIcon, selectedProduct, index) {
+//     buyAgainMessage.innerHTML = '&#10003; Added'
+//     buyAgainIcon.style.display = 'none'
 
-    cart = JSON.parse(localStorage.getItem('cart')) || [];
-    // console.log("Cart before loading:", cart);
+//     cart = JSON.parse(localStorage.getItem('cart')) || [];
+//     // console.log("Cart before loading:", cart);
 
-  cart = JSON.parse(localStorage.getItem('cart')) || [];
+//   cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-  // Convert each item to its correct class instance basically run loadCart() manually
-  cart = cart.map(item => {
-      if (item.category === 'clothing') {
-          return Clothing.fromJSON(item);
-      } else {
-          return Product.fromJSON(item);
-      }
-  }); // This should convert objects to Product instances
+//   // Convert each item to its correct class instance basically run loadCart() manually
+//   cart = cart.map(item => {
+//       if (item.category === 'clothing') {
+//           return Clothing.fromJSON(item);
+//       } else {
+//           return Product.fromJSON(item);
+//       }
+//   }); // This should convert objects to Product instances
 
-    // console.log("Cart after loading:", cart);
+//     // console.log("Cart after loading:", cart);
 
-    // Ensure `selectedProduct` is an instance of `Product`
-    // console.log("Selected product before check:", selectedProduct, "Instance of Product:", selectedProduct instanceof Product);
-    if (!(selectedProduct instanceof Product)) {
-        selectedProduct = Product.fromJSON(selectedProduct);
-    }
-    // console.log("Selected product after check:", selectedProduct, "Instance of Product:", selectedProduct instanceof Product);
+//     // Ensure `selectedProduct` is an instance of `Product`
+//     // console.log("Selected product before check:", selectedProduct, "Instance of Product:", selectedProduct instanceof Product);
+//     if (!(selectedProduct instanceof Product)) {
+//         selectedProduct = Product.fromJSON(selectedProduct);
+//     }
+//     // console.log("Selected product after check:", selectedProduct, "Instance of Product:", selectedProduct instanceof Product);
 
-    // Log each product inside the cart to confirm their type
-    // cart.forEach((product, i) => {
-    //     console.log(`Cart item ${i}:`, product, "Instance of Product:", product instanceof Product);
-    // });
+//     // Log each product inside the cart to confirm their type
+//     // cart.forEach((product, i) => {
+//     //     console.log(`Cart item ${i}:`, product, "Instance of Product:", product instanceof Product);
+//     // });
 
-    // Find the product in the cart
-    const existingProduct = cart.find(product => product.getId() === selectedProduct.getId());
+//     // Find the product in the cart
+//     const existingProduct = cart.find(product => product.getId() === selectedProduct.getId());
 
-    // console.log("Existing product found:", existingProduct);
-    // console.log(existingProduct.quantity)
+//     // console.log("Existing product found:", existingProduct);
+//     // console.log(existingProduct.quantity)
 
-    if (existingProduct) {
-      existingProduct.quantity += 1;
-    } else {
-      selectedProduct.quantity = 1;
+//     if (existingProduct) {
+//       existingProduct.quantity += 1;
+//     } else {
+//       selectedProduct.quantity = 1;
 
-      // Ensure delivery option is set
-      if (!selectedProduct.deliveryOptionId) {
-        selectedProduct.deliveryOptionId = '1';
-      }
+//       // Ensure delivery option is set
+//       if (!selectedProduct.deliveryOptionId) {
+//         selectedProduct.deliveryOptionId = '1';
+//       }
 
-      cart.push(selectedProduct);
-    }
+//       cart.push(selectedProduct);
+//     }
 
-    // Save the updated cart
-    localStorage.setItem('cart', JSON.stringify(cart.map(product => product.toJSON())));
+//     // Save the updated cart
+//     localStorage.setItem('cart', JSON.stringify(cart.map(product => product.toJSON())));
 
-    setTimeout(() => {
-        buyAgainMessage.textContent = 'Buy it again'
-        buyAgainIcon.style.display = 'inline'
-    }, 2000);
-}
+//     setTimeout(() => {
+//         buyAgainMessage.textContent = 'Buy it again'
+//         buyAgainIcon.style.display = 'inline'
+//     }, 2000);
+// }
 
 console.log("Cart from orderSummary.js:", cart);
 
@@ -199,21 +199,21 @@ function handleLoadedProducts() {
             productQuantity.className = 'product-quantity'
             productQuantity.textContent = `Quantity: ${product.quantity}`
 
-            const buyAgainButton = document.createElement('button')
-            buyAgainButton.classList.add('buy-again-button', 'button-primary')
+            // const buyAgainButton = document.createElement('button')
+            // buyAgainButton.classList.add('buy-again-button', 'button-primary')
 
-            const buyAgainIcon = document.createElement('img')
-            buyAgainIcon.className = 'buy-again-icon'
-            buyAgainIcon.src = 'images/icons/buy-again.png'
+            // const buyAgainIcon = document.createElement('img')
+            // buyAgainIcon.className = 'buy-again-icon'
+            // buyAgainIcon.src = 'images/icons/buy-again.png'
 
-            const buyAgainMessage = document.createElement('span')
-            buyAgainMessage.className = 'buy-again-message'
-            buyAgainMessage.textContent = 'Buy it again'
+            // const buyAgainMessage = document.createElement('span')
+            // buyAgainMessage.className = 'buy-again-message'
+            // buyAgainMessage.textContent = 'Buy it again'
 
-            buyAgainButton.append(buyAgainIcon, buyAgainMessage)
-            buyAgainButton.addEventListener('click', () => buyAgain(buyAgainMessage, buyAgainIcon, originalProductDetails, productIndex))
+            // buyAgainButton.append(buyAgainIcon, buyAgainMessage)
+            // buyAgainButton.addEventListener('click', () => buyAgain(buyAgainMessage, buyAgainIcon, originalProductDetails, productIndex))
 
-            productDetails.append(productImageContainer, productName, productDeliveryDate, productQuantity, buyAgainButton)
+            productDetails.append(productImageContainer, productName, productDeliveryDate, productQuantity)
 
             const trackPackageButton = document.createElement('button')
             trackPackageButton.classList.add('track-package-button', 'button-secondary')

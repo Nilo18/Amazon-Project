@@ -28,7 +28,6 @@ export function loadCart() {
   // console.log("Cart after loading:", cart);
 }
 
-
 function renderProductsGrid() {
   //The main grid
   const productsGrid = document.querySelector('.js-products-grid');
@@ -89,39 +88,41 @@ function renderProductsGrid() {
 
   //Checkout array, to push the items on the checkout page
 
+  // Add product to cart or update quantity
   function addToCart(selectedProduct, index) {
-    cart = JSON.parse(localStorage.getItem('cart')) || [];
-    loadCart(); // Reload the cart
-
-    // selectedProduct is the original product from the products array, thus is a Product class instance by default
-    // product is the regular object from the cart which was just converted back to a Product class instance
-    const existingProduct = cart.find(product => product.getId() === selectedProduct.getId());
-
-    if (existingProduct) {
-      existingProduct.quantity += parseInt(document.querySelectorAll('.product-quantity-container select')[index].value);
-    } else {
-      selectedProduct.quantity = parseInt(document.querySelectorAll('.product-quantity-container select')[index].value);
-      
-      // Only set deliveryOptionId if it's undefined (prevents overwriting selected options)
-      if (!selectedProduct.deliveryOptionId) {
-        selectedProduct.deliveryOptionId = '1';
+      cart = JSON.parse(localStorage.getItem('cart')) || [];
+      loadCart();  // Reload the cart
+  
+      const quantityToAdd = parseInt(document.querySelectorAll('.product-quantity-container select')[index].value);
+      const existingProduct = cart.find(product => product.getId() === selectedProduct.getId());
+  
+      if (existingProduct) {
+          existingProduct.quantity += quantityToAdd;
+      } else {
+          selectedProduct.quantity = quantityToAdd;
+          if (!selectedProduct.deliveryOptionId) {
+              selectedProduct.deliveryOptionId = '1';
+          }
+          cart.push(selectedProduct);
       }
-
-      cart.push(selectedProduct);
-    }
-
-    // Save the updated cart back to localStorage
-    localStorage.setItem('cart', JSON.stringify(cart.map(product => product.toJSON())));
-    // console.log('Cart Item:', cart[0])
+  
+      // Update counter based on quantity added
+      counter += quantityToAdd;
+      cartQuantity.textContent = counter;  // Update the displayed counter
+      localStorage.setItem('counter', counter);  // Save the updated counter
+  
+      // Save updated cart to localStorage
+      localStorage.setItem('cart', JSON.stringify(cart.map(product => product.toJSON())));
   }
+  
   console.log('Cart from amazon.js', cart);  // Log to confirm the cart update
 
-  function handleQuantity(index) {
-    const optionChosen = parseInt(document.querySelectorAll('.product-quantity-container select')[index].value);
-    counter += optionChosen;
-    cartQuantity.textContent = counter;
-    localStorage.setItem('counter', counter);
-  }
+  // function handleQuantity(index) {
+  //   const optionChosen = parseInt(document.querySelectorAll('.product-quantity-container select')[index].value);
+  //   counter += optionChosen;
+  //   cartQuantity.textContent = counter;
+  //   localStorage.setItem('counter', counter);
+  // }
 
   function createAddedMessage(index) {
     if (!displayed[index]) {
@@ -142,7 +143,7 @@ function renderProductsGrid() {
       }, 2000);
     }
 
-    handleQuantity(index);
+    // handleQuantity(index);
     addToCart(products[index], index);
     console.log(products[index])
   }
