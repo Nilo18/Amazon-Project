@@ -1,6 +1,7 @@
 import {cart} from "./cart.js"
 import {getDeliveryOption} from "./deliveryOptions.js"
 import { formatCurrency } from "../scripts/utils/money.js";
+import { addOrder } from "./orderSummary.js";
 
 function getProduct(selectedProduct) {
     return cart.find(product => product.id === selectedProduct.id);
@@ -73,4 +74,45 @@ export function renderPaymentSummary() {
     `
     const paymentSummary = document.querySelector('.js-payment-summary')
     paymentSummary.innerHTML = paymentSummaryHTML
+
+    const placeOrderBtn = document.getElementById('placeOrderBtn');
+    placeOrderBtn.addEventListener('click', async () => {
+      // Only add the order if the cart actually contains products
+      if (cart.length !== 0) {
+      // Rename 'id' to 'productId' in each cart item
+      const updatedCart = cart.map(item => {
+        return {
+          ...item,
+          productId: item.id,  // Renaming 'id' to 'productId'
+          // Optionally, you can delete the 'id' key if you no longer need it
+          // id: undefined 
+        };
+      });
+    try {
+      const response = await fetch('https://supersimplebackend.dev/orders', {
+        method: 'POST',
+        // The header specifies the content type of the data that is being sent to the server
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          cart: updatedCart,  // Sending the updated cart
+        }),
+      });
+    
+      const order = await response.json();
+      addOrder(order)
+    } catch (error) {
+      console.log('Unexpected error: ', error)
+    }
+
+    window.location.href = 'orders.html'
+  }
+  // If the cart is empty notify the user to prevent them from abusing the orders page 
+  else {
+    alert('The cart is empty.')
+  }
+ });    
 }
+
+// console.log(cart)

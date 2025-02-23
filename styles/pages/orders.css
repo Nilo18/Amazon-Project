@@ -161,6 +161,10 @@
   padding: 8px;
 }
 
+#orderContainer1, #orderContainer2 {
+  display: none;
+}
+
 @media (max-width: 800px) {
   .buy-again-button {
     margin-bottom: 10px;

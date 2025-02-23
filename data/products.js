@@ -85,7 +85,7 @@ export class Product {
 }
 
 // If we don't add a constructor to the child class, it will automatically call the parent's constructor 
-class Clothing extends Product {
+export class Clothing extends Product {
   sizeChartLink
 
   constructor(productDetails) {
@@ -118,6 +118,7 @@ class Clothing extends Product {
 
 export let products = []
 
+// async makes a function return a promise
 export async function loadProducts(callback) {
  try {
     const controller = new AbortController(); // Helps cancel slow requests

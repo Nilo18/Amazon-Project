@@ -1,20 +1,33 @@
-import { products, Product, loadProducts } from "../data/products.js";
+import { products, Product, Clothing, loadProducts } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
 // import {getProduct} from "../data/cart.js"
 
 loadProducts(renderProductsGrid);
 
+console.log('Products array: ', products)
+
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
-loadCart()
+loadCart() // Aqedan bolos isev Product is instance ebi xdebian mgoni
+
+// loadCart() doesn't work in other files because it modifies the local copy of the cart here
+// We need loadCart() to convert regular objects into class instance again so we can use getter methods such as getId()
 
 // Function to convert an object into Product class instance to load from cart
-function loadCart() {
+export function loadCart() {
+  cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  // Convert each item to its correct class instance
   cart = cart.map(item => {
-    const product = Product.fromJSON(item);  // Use the fromJSON to create a Product instance
-    console.log(product);  // Log to check the converted product
-    return product;  // Return the newly created Product instance
+      if (item.category === 'clothing') {
+          return Clothing.fromJSON(item);
+      } else {
+          return Product.fromJSON(item);
+      }
   });
+
+  // console.log("Cart after loading:", cart);
 }
+
 
 function renderProductsGrid() {
   //The main grid
@@ -80,6 +93,8 @@ function renderProductsGrid() {
     cart = JSON.parse(localStorage.getItem('cart')) || [];
     loadCart(); // Reload the cart
 
+    // selectedProduct is the original product from the products array, thus is a Product class instance by default
+    // product is the regular object from the cart which was just converted back to a Product class instance
     const existingProduct = cart.find(product => product.getId() === selectedProduct.getId());
 
     if (existingProduct) {
@@ -97,8 +112,9 @@ function renderProductsGrid() {
 
     // Save the updated cart back to localStorage
     localStorage.setItem('cart', JSON.stringify(cart.map(product => product.toJSON())));
-    console.log(cart);  // Log to confirm the cart update
+    // console.log('Cart Item:', cart[0])
   }
+  console.log('Cart from amazon.js', cart);  // Log to confirm the cart update
 
   function handleQuantity(index) {
     const optionChosen = parseInt(document.querySelectorAll('.product-quantity-container select')[index].value);
